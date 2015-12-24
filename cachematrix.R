@@ -13,24 +13,30 @@
 # > mycached <- makeCacheMatrix(matrix(rexp(9), 3)) # generate another random 3 x 3 matrix 
 # > cacheSolve(mycached) # matrix has changed, so you should NOT see the 'returning cached version' message
 
+# makeCacheMatrix accepts a matrix for caching
 makeCacheMatrix <- function(x = matrix()) {
   
   cachedMatrix <- x 
   cachedInverse <- NULL
   
+  # get a copy of the original matrix
   get <- function() {
     return(cachedMatrix)
   }
   
+  # cache a copy of the original matrix
+  # set the cached copy of the inverse matrix to NULL so we know that the original matrix has changed
   set <- function(matrix_in) {
     cachedMatrix <<- matrix_in
     cachedInverse <<- NULL
   }
   
+  # get a copy of the cached inverse matrix
   getinverse <- function() {
     return(cachedInverse)
   }
   
+  # cache a copy of the inverse matrix
   setinverse <- function(matrix_in) {
     cachedInverse <<- matrix_in 
   }
@@ -40,12 +46,16 @@ makeCacheMatrix <- function(x = matrix()) {
 }
 
 
-## Write a short comment describing this function
+# cacheSolve calculates the inverse of a matrix.
+# If the inverse has already been calculated, it returns a cached copy
+#
+# cacheObj = object of type makeCacheMatrix
+#
 cacheSolve <- function(cacheObj, ...) {
   ## Check to see if the object has already been cached
   inverseMatrix <- cacheObj$getinverse()
   if(!is.null(inverseMatrix)) {
-    # already cached, so simply return value
+    # already cached, so show message and return value
     message("returning cached version")
     return(inverseMatrix)
   } else {
